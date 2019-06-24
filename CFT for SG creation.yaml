@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates an EC2 Container Service Cluster.
+
+Parameters:
+  EnvironmentName:
+    Description: Environment Name
+    Type: String
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  Env:
+    Description: Environment Type (Dev, Test, Prod)
+    Type: String
+    AllowedValues:
+      - "Prod"
+      - "Test"
+      - "Dev"
+    Default: Dev
+  ResourceOwner:
+    Type: String
+    Default: firstname.lastname
+
+
+Resources:
+
+  WindowsRDPSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: !Sub "${EnvironmentName}-UI-LB-SG2"
+      SecurityGroupIngress:
+      -
+        IpProtocol: "tcp"
+        FromPort: "2738"
+        ToPort: "2738"
+        CidrIp: "22.174.7.0/24"
+        Description: Tools Port
+      -
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "22.174.7.0/24"
+        Description: Tools Port
+      -
+        IpProtocol: "tcp"
+        FromPort: "9443"
+        ToPort: "9443"
+        CidrIp: "22.174.7.0/24"
+        Description: Tools Port
+      -
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "22.174.7.0/24"
+        Description: Tools Port
+      -
+        IpProtocol: "tcp"
+        FromPort: "8443"
+        ToPort: "8443"
+        CidrIp: "22.174.7.0/24"
+        Description: Tools Port
+      - 
+        IpProtocol: "tcp"
+        FromPort: "22"
+        ToPort: "22"
+        CidrIp: "22.174.7.0/24"
+      -   
+        IpProtocol: "tcp"
+        FromPort: "137"
+        ToPort: "137"
+        CidrIp: "22.174.7.0/24"
+      - 
+        IpProtocol: "tcp"
+        FromPort: "3389"
+        ToPort: "3389"
+        CidrIp: "30.0.0.0/8"
+        Description: Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.17.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "170.252.17.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.18.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "8443"
+        ToPort: "8443"
+        CidrIp: "170.252.18.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.19.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "8443"
+        ToPort: "8443"
+        CidrIp: "170.252.19.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "170.252.19.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "3389"
+        ToPort: "3389"
+        CidrIp: "170.252.57.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.57.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "170.252.21.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.21.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "8443"
+        ToPort: "8443"
+        CidrIp: "170.252.22.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "170.252.22.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.22.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "9443"
+        ToPort: "9443"
+        CidrIp: "170.252.22.0/24"
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        CidrIp: "170.252.23.0/24" 
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "383"
+        ToPort: "383"
+        CidrIp: "170.252.23.0/24" 
+        Description: Inbound Traffic is controlled on Transit Firewall
+      - 
+        IpProtocol: "tcp"
+        FromPort: "9443"
+        ToPort: "9443"
+        CidrIp: "170.252.23.0/24" 
+        Description: Inbound Traffic is controlled on Transit Firewall
+
+          
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: 'environment-type'
+          Value: !Ref Env
+        - Key: 'resource-owner'
+          Value: !Ref ResourceOwner
+
+ 
+
+Outputs:
+
+  WindowsRDPSecurityGroup:
+    Value: !Ref WindowsRDPSecurityGroup
+    Export:
+      Name: !Sub "${EnvironmentName}-UI-LB-SG"
+
