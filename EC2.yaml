@@ -63,4 +63,4 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
-      InstanceType: !Ref InstanceType
+      InstanceType: !Ref InstanceType----test
